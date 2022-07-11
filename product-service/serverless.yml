@@ -19,15 +19,15 @@ provider:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
 
 functions:
-  first:
-    handler: functions/products.hello
+  getProductsList:
+    handler: functions/getProductsList.default
     events:
       - httpApi:
           method: get
           path: /products
-  second:
-    handler: functions/second.hello
+  getProductsById:
+    handler: functions/getProductsById.default
     events:
       - httpApi:
           method: get
-          path: /second
+          path: /products/{productId}
