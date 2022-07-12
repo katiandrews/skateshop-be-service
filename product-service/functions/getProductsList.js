@@ -1,18 +1,14 @@
 import productsData from '../productsData.json';
 
 const getProductsList = async (event, context, cb) => {
-  const p = new Promise((resolve) => {
-    resolve('success');
-  });
-
-  p.then(() =>
+  try {
     cb(
       null,
-      {
-        ...productsData,
-      }
-    )
-  ).catch((e) => cb(e));
+      { ...productsData },
+    );
+  } catch (error) {
+    cb(error);
+  }
 };
 
 export default getProductsList;
