@@ -1,20 +1,18 @@
 import productsData from '../productsData.json';
 
-const getProductsById = (event, context, cb) => {
+const getProductsById = async (event) => {
   const { productId } = event.pathParameters;
   const product = productsData.find(el => el.id === productId);
 
   if (!product) {
-    cb(
-      null,
-      { error: 'Product not found' },
-    );
+    return {
+      error: 'Product not found',
+    }
   }
 
-  cb(
-    null,
-    { ...product },
-  )
+  return {
+    ...product,
+  }
 };
 
 export default getProductsById;
