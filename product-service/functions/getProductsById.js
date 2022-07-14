@@ -12,7 +12,13 @@ const getProductsById = async (event) => {
       error: 'Product not found',
     }
   }
-    return product;
+    return {
+      body: product,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*',
+      }
+    }
     
   } catch (error) {
     return error;
