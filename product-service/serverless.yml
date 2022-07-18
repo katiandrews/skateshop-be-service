@@ -1,0 +1,67 @@
+service: product-service
+# app and org for use with dashboard.serverless.com
+#app: your-app-name
+#org: your-org-name
+frameworkVersion: '3'
+
+plugins:
+  - serverless-auto-swagger
+  - serverless-webpack
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  region: eu-west-1
+  apiGateway:
+    minimumCompressionSize: 1024
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+
+functions:
+  getProductsList:
+    handler: functions/getProductsList.default
+    events:
+      - httpApi:
+          method: get
+          path: /products
+          responses: {
+            200: {
+              description: 'List of products',
+              bodyType:  'ProductsResponse',
+            },
+            400: {
+              description: Invalid request,
+              bodyType:  'ErrorResponse',
+            },
+            500: {
+              description: Invalid request,
+              bodyType:  'ErrorResponse',
+            }
+          }
+  getProductsById:
+    handler: functions/getProductsById.default
+    events:
+      - httpApi:
+          method: get
+          path: /products/{productId}
+          responses: {
+            200: {
+              description: 'Product info',
+              bodyType:  'ProductResponse',
+            },
+            400: {
+              description: Invalid request,
+              bodyType:  'ErrorResponse',
+            },
+            500: {
+              description: Invalid request,
+              bodyType:  'ErrorResponse',
+            }
+          }
+
+custom:
+    autoswagger:
+        title: 'Product service'
+        generateSwaggerOnDeploy: true
+        typefiles: ['./types/products.d.ts', './types/errors.d.ts']
