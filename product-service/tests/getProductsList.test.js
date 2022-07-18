@@ -20,4 +20,17 @@ describe('getProductsList', () => {
       },
     });
   })
+
+  it('returns error if products request fails',async () => {
+    const mockedErrorMessage = 'foo';
+
+    axios.get.mockRejectedValueOnce({
+      message: mockedErrorMessage,
+    })
+
+    expect(await getProductsList()).toStrictEqual({
+      statusCode: 500,
+      body: mockedErrorMessage,
+    });
+  })
 });
