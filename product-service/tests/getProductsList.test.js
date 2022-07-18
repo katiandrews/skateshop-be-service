@@ -1,8 +1,23 @@
+import axios from "axios";
+
 import getProductsList from '../functions/getProductsList';
-import productsData from '../productsData.json';
+
+jest.mock('axios');
 
 describe('getProductsList', () => {
   it('returns products list',async () => {
-    expect(await getProductsList()).toStrictEqual({ ...productsData });
+    const mockedProducts = [{ foo: 'bar'}];
+
+    axios.get.mockResolvedValueOnce({
+      data: mockedProducts,
+    });
+
+    expect(await getProductsList()).toStrictEqual({
+      body: mockedProducts,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*',
+      },
+    });
   })
 });

@@ -1,18 +1,37 @@
+import axios from "axios";
+
 import getProductsById from '../functions/getProductsById';
 
+jest.mock('axios');
+
 describe('getProductsById', () => {
+  const mockedProductId = 'qwe';
+  const mockedProducts = [{
+    foo: 'bar',
+    id: mockedProductId,
+  }];
+
+  beforeEach(() => {
+    axios.get.mockResolvedValueOnce({
+      data: mockedProducts,
+    });
+  });
+
   it('returns product with id',async () => {
     const expectedResponse = {
-      "count": 4,
-      "description": "Pow Supply Co 8.25 Plant Blue Complete",
-      "id": "7567ec4b-b10c-48c5-9345-fc73c48a80aa",
-      "price": 70,
-      "title": "Element"
+      body: {
+        foo: 'bar',
+        id: mockedProductId,
+      },
+      headers: {
+        'Access-Control-Allow-Headers': '*',
+        'Access-Control-Allow-Origin': '*',
+      },
     };
 
     expect(await getProductsById({
       pathParameters: {
-        productId: '7567ec4b-b10c-48c5-9345-fc73c48a80aa'
+        productId: mockedProductId
       }
     })).toStrictEqual(expectedResponse);
   });
