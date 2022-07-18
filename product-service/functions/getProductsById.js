@@ -9,6 +9,7 @@ const getProductsById = async (event) => {
 
     if (!product) {
     return {
+      statusCode: 400,
       error: 'Product not found',
     }
   }
@@ -21,7 +22,10 @@ const getProductsById = async (event) => {
     }
     
   } catch (error) {
-    return error;
+    return {
+      statusCode: 500,
+      error: error.message,
+    };
   }
 };
 

@@ -4,8 +4,8 @@ service: product-service
 #org: your-org-name
 frameworkVersion: '3'
 
-# Add the serverless-webpack plugin
 plugins:
+  - serverless-auto-swagger
   - serverless-webpack
 
 provider:
@@ -25,9 +25,43 @@ functions:
       - httpApi:
           method: get
           path: /products
+          responses: {
+            200: {
+              description: 'List of products',
+              bodyType:  'ProductsResponse',
+            },
+            400: {
+              description: Invalid request,
+              bodyType:  'ErrorResponse',
+            },
+            500: {
+              description: Invalid request,
+              bodyType:  'ErrorResponse',
+            }
+          }
   getProductsById:
     handler: functions/getProductsById.default
     events:
       - httpApi:
           method: get
           path: /products/{productId}
+          responses: {
+            200: {
+              description: 'Product info',
+              bodyType:  'ProductResponse',
+            },
+            400: {
+              description: Invalid request,
+              bodyType:  'ErrorResponse',
+            },
+            500: {
+              description: Invalid request,
+              bodyType:  'ErrorResponse',
+            }
+          }
+
+custom:
+    autoswagger:
+        title: 'Product service'
+        generateSwaggerOnDeploy: true
+        typefiles: ['./types/products.d.ts', './types/errors.d.ts']

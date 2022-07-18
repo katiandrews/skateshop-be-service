@@ -30,7 +30,7 @@ describe('getProductsList', () => {
 
     expect(await getProductsList()).toStrictEqual({
       statusCode: 500,
-      body: mockedErrorMessage,
+      error: mockedErrorMessage,
     });
   })
 });

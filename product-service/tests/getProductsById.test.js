@@ -38,6 +38,7 @@ describe('getProductsById', () => {
 
   it('returns error if id not found',async () => {
     const expectedResponse = {
+      statusCode: 400,
       error: 'Product not found',
     };
 

@@ -15,7 +15,7 @@ const getProductsList = async () => {
   } catch (error) {
     return {
       statusCode: 500,
-      body: error.message,
+      error: error.message,
     }
   }
 };
