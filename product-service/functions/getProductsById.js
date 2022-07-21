@@ -1,20 +1,40 @@
-import axios from "axios";
+import { Client } from 'pg';
+
+const { PG_HOST, PG_PORT, PG_DATABASE, PG_USERNAME, PG_PASSWORD } = process.env;
+const dbOptions = {
+  host: PG_HOST,
+  port: PG_PORT,
+  database: PG_DATABASE,
+  user: PG_USERNAME,
+  password: PG_PASSWORD,
+  ssl: {
+    rejectUnauthorized: false
+  },
+  connectionTimeoutMillis: 5000
+};
 
 const getProductsById = async (event) => {
   const { productId } = event.pathParameters;
+  console.log('New request with parameter productId', productId);
+
+  const client = new Client(dbOptions);
+  await client.connect();
 
   try {
-    const { data: productsData } = await axios.get('https://kb68k4fkw8.execute-api.eu-west-1.amazonaws.com/skates');
-    const product = productsData.find(el => el.id === productId);
+    const { rows: product } = await client.query(`
+      select id, title, description, price, count from products 
+      inner join stocks on id = product_id
+      where id = '${productId}'
+    `);
 
-    if (!product) {
+    if (!product[0]) {
     return {
       statusCode: 400,
       error: 'Product not found',
     }
   }
     return {
-      body: product,
+      body: product[0],
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': '*',
@@ -26,6 +46,8 @@ const getProductsById = async (event) => {
       statusCode: 500,
       error: error.message,
     };
+  } finally {
+    client.end();
   }
 };
 
