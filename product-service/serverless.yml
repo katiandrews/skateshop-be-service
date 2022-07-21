@@ -59,6 +59,25 @@ functions:
               bodyType:  'ErrorResponse',
             }
           }
+  addProduct:
+    handler: functions/addProduct.default
+    events:
+      - httpApi:
+          method: post
+          path: /products
+          responses: {
+            200: {
+              description: 'Product is added to database',
+            },
+            400: {
+              description: Invalid request,
+              bodyType:  'ErrorResponse',
+            },
+            500: {
+              description: Invalid request,
+              bodyType:  'ErrorResponse',
+            }
+          }
 
 custom:
     autoswagger:
