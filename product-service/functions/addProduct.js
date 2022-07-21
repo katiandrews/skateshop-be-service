@@ -13,13 +13,16 @@ const dbOptions = {
   connectionTimeoutMillis: 5000
 };
 
+const DEFAULT_COUNT = 20;
+
 const addProduct = async (event) => {
   console.log('New request started with payload', event);
 
   const client = new Client(dbOptions);
   await client.connect();
 
-  const insertText = 'INSERT INTO products(title, description, price) VALUES($1, $2, $3)'
+  const insertProduct = 'INSERT INTO products(title, description, price) VALUES($1, $2, $3) RETURNING id'
+  const insertStock = 'INSERT INTO stocks(product_id, count) VALUES($1, $2)'
 
   try {
     if (!event.title || !event.description || !event.price) {
@@ -29,26 +32,42 @@ const addProduct = async (event) => {
       }
     }
 
-    await client.query(
-      insertText,
-      [event.title, event.description, event.price]
-    );
-  
-    // return {
-    //   body: products,
-    //   headers: {
-    //     'Access-Control-Allow-Origin': '*',
-    //     'Access-Control-Allow-Headers': '*',
-    //   }
-    // };
+    try {
+      await client.query('BEGIN');
+      
+      const { rows } = await client.query(
+        insertProduct,
+        [event.title, event.description, event.price],
+      );
+
+      const productId = rows[0].id;
+      
+      await client.query(
+        insertStock,
+        [`${productId}`, DEFAULT_COUNT],
+      );
+
+      await client.query('COMMIT');
+
+      return {
+        id: productId,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': '*',
+        }
+      };
+    } catch (e) {
+      await client.query('ROLLBACK')
+      throw e;
+    } finally {
+      client.end();
+    }
     
   } catch (error) {
     return {
       statusCode: 500,
       error: error.message,
     }
-  } finally {
-    client.end();
   }
 };
 
