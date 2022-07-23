@@ -38,6 +38,48 @@
             }
           }
         }
+      },
+      "post": {
+        "summary": "addProduct",
+        "description": "",
+        "operationId": "addProduct.post./products",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Body required in the request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewProduct"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product is added to database",
+            "schema": {
+              "$ref": "#/definitions/ProductAdded"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
       }
     },
     "/products/{productId}": {
@@ -117,6 +159,30 @@
       "title": "Product",
       "type": "object"
     },
+    "NewProduct": {
+      "properties": {
+        "description": {
+          "title": "NewProduct.description",
+          "type": "string"
+        },
+        "price": {
+          "title": "NewProduct.price",
+          "type": "number"
+        },
+        "title": {
+          "title": "NewProduct.title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "description",
+        "price",
+        "title"
+      ],
+      "additionalProperties": false,
+      "title": "NewProduct",
+      "type": "object"
+    },
     "ProductsResponse": {
       "properties": {
         "body": {
@@ -187,6 +253,40 @@
       ],
       "additionalProperties": false,
       "title": "ProductResponse",
+      "type": "object"
+    },
+    "ProductAdded": {
+      "properties": {
+        "id": {
+          "title": "ProductAdded.id",
+          "type": "string"
+        },
+        "headers": {
+          "properties": {
+            "'Access-Control-Allow-Origin'": {
+              "title": "ProductAdded.headers.'Access-Control-Allow-Origin'",
+              "type": "string"
+            },
+            "'Access-Control-Allow-Headers'": {
+              "title": "ProductAdded.headers.'Access-Control-Allow-Headers'",
+              "type": "string"
+            }
+          },
+          "required": [
+            "'Access-Control-Allow-Origin'",
+            "'Access-Control-Allow-Headers'"
+          ],
+          "additionalProperties": false,
+          "title": "ProductAdded.headers",
+          "type": "object"
+        }
+      },
+      "required": [
+        "id",
+        "headers"
+      ],
+      "additionalProperties": false,
+      "title": "ProductAdded",
       "type": "object"
     },
     "ErrorResponse": {

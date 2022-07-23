@@ -65,9 +65,11 @@ functions:
       - httpApi:
           method: post
           path: /products
+          bodyType: 'NewProduct'
           responses: {
             200: {
               description: 'Product is added to database',
+              bodyType: 'ProductAdded',
             },
             400: {
               description: Invalid request,

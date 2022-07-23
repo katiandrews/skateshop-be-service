@@ -16,7 +16,17 @@ const dbOptions = {
 const DEFAULT_COUNT = 20;
 
 const addProduct = async (event) => {
-  console.log('New request started with payload', event);
+  const { body } = event;
+  console.log('New request started with payload', body);
+
+  if (!body) {
+    return {
+      statusCode: 400,
+      error: 'Bad request',
+    }
+  }
+
+  const { title, description, price } = JSON.parse(body);
 
   const client = new Client(dbOptions);
   await client.connect();
@@ -25,7 +35,7 @@ const addProduct = async (event) => {
   const insertStock = 'INSERT INTO stocks(product_id, count) VALUES($1, $2)'
 
   try {
-    if (!event.title || !event.description || !event.price) {
+    if (!title || !description || !price) {
       return {
         statusCode: 400,
         error: 'Bad request',
@@ -37,7 +47,7 @@ const addProduct = async (event) => {
       
       const { rows } = await client.query(
         insertProduct,
-        [event.title, event.description, event.price],
+        [title, description, price],
       );
 
       const productId = rows[0].id;
