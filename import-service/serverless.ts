@@ -10,6 +10,11 @@ const serverlessConfiguration: AWS = {
     name: 'aws',
     runtime: 'nodejs14.x',
     region: 'eu-west-1',
+    iamRoleStatements: [{
+      Effect: 'Allow',
+      Resource: 'arn:aws:s3:::skate-shop-products/*',
+      Action: "s3:*",
+    }],
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
