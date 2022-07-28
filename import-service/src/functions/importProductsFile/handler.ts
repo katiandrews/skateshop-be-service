@@ -8,12 +8,14 @@ const BUCKET_NAME = 'skate-shop-products';
 const handler = async (event: { queryStringParameters: { name: string; }; }) => {
   const { name } = event.queryStringParameters;   
 
-  const s3 = new S3({ region: 'eu-west-1' });
+  const s3 = new S3({ 
+    region: 'eu-west-1',
+    endpoint: 'https://s3-eu-west-1.amazonaws.com/',
+  });
+
   const params = {
-    Body: name,
     Bucket: BUCKET_NAME,
     Key: `uploaded/${name}`,
-    ContentType: 'text/csv'
   };
 
   try {
