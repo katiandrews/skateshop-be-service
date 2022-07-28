@@ -10,7 +10,13 @@ const serverlessConfiguration: AWS = {
     name: 'aws',
     runtime: 'nodejs14.x',
     region: 'eu-west-1',
-    iamRoleStatements: [{
+    iamRoleStatements: [
+      {
+        Effect: 'Allow',
+        Resource: 'arn:aws:s3:::skate-shop-products',
+        Action: "s3:ListBucket",
+      },
+      {
       Effect: 'Allow',
       Resource: 'arn:aws:s3:::skate-shop-products/*',
       Action: "s3:*",

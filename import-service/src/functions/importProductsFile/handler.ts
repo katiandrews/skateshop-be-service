@@ -13,11 +13,11 @@ const handler = async (event: { queryStringParameters: { name: string; }; }) => 
     Body: name,
     Bucket: BUCKET_NAME,
     Key: `uploaded/${name}`,
+    ContentType: 'text/csv'
   };
 
   try {
     const putObjectCommand = new PutObjectCommand(params);
-    await s3.send(putObjectCommand);
 
     const url = await getSignedUrl(s3, putObjectCommand, { expiresIn: 3600 });
 
