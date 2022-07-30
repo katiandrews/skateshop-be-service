@@ -15,7 +15,7 @@ const dbOptions = {
 
 const DEFAULT_COUNT = 20;
 
-const addProduct = async (event) => {
+const createProduct = async (event) => {
   const { body } = event;
   console.log('New request started with payload', body);
 
@@ -81,4 +81,4 @@ const addProduct = async (event) => {
   }
 };
 
-export default addProduct;
+export default createProduct;

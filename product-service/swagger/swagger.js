@@ -40,9 +40,9 @@
         }
       },
       "post": {
-        "summary": "addProduct",
+        "summary": "createProduct",
         "description": "",
-        "operationId": "addProduct.post./products",
+        "operationId": "createProduct.post./products",
         "consumes": [
           "application/json"
         ],

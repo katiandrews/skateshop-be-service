@@ -59,8 +59,8 @@ functions:
               bodyType:  'ErrorResponse',
             }
           }
-  addProduct:
-    handler: functions/addProduct.default
+  createProduct:
+    handler: functions/createProduct.default
     events:
       - httpApi:
           method: post
