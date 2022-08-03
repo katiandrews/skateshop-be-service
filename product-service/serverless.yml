@@ -123,9 +123,27 @@ resources:
       Type: AWS::SNS::Topic
       Properties:
         TopicName: createProductTopic
-        Subscription: 
-          - Endpoint: ekaterina_andriushina@epam.com
-            Protocol: email
+    HighPriceSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Protocol: email
+        Endpoint: rinka.jan@gmail.com
+        TopicArn:
+          Ref: ProductsTopic
+        FilterPolicy: {
+          "price": [{ "numeric": [ ">=", 60 ] }]
+        }
+    LowPriceSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Protocol: email
+        Endpoint: ekaterina_andriushina@epam.com
+        TopicArn:
+          Ref: ProductsTopic
+        FilterPolicy: {
+          "price": [{ "numeric": [ "<", 60 ] }]
+        }
+
         
 
 

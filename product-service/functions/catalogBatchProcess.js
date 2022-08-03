@@ -23,6 +23,12 @@ const catalogBatchProcess = async (event) => {
       await sns.send(new PublishCommand({
         Subject: 'New products created',
         Message: JSON.stringify(newProduct),
+        MessageAttributes: {
+          price: {
+            DataType: "Number", 
+            StringValue: newProduct.price,
+          }
+        },
         TopicArn: process.env.PRODUCTS_SNS_ARN,
       }));
     }
