@@ -1,7 +1,10 @@
 import type { AWS } from '@serverless/typescript';
+import * as dotenv from "dotenv";
 
 import importProductsFile from '@functions/importProductsFile';
 import importFileParser from '@functions/importFileParser';
+
+dotenv.config({path: __dirname + '/.env'});
 
 const serverlessConfiguration: AWS = {
   service: 'import-service',
