@@ -17,6 +17,13 @@ provider:
     minimumCompressionSize: 1024
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    SQS_QUEUE_URL: { Ref: ProductsQueue }
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - sqs:*
+      Resource:
+        Fn::GetAtt: [ ProductsQueue, Arn ]
 
 functions:
   getProductsList:
@@ -80,6 +87,32 @@ functions:
               bodyType:  'ErrorResponse',
             }
           }
+  catalogBatchProcess:
+    handler: functions/catalogBatchProcess.default
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - ProductsQueue
+              - Arn
+          batchSize: 5
+
+resources:
+  Resources: 
+    ProductsQueue:
+      Type: "AWS::SQS::Queue"
+      Properties: 
+        QueueName: "catalogItemsQueue"
+        ReceiveMessageWaitTimeSeconds: 20
+    ProductsTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: createProductTopic
+        Subscription: 
+          - Endpoint: ekaterina_andriushina@epam.com
+            Protocol: email
+        
+
 
 custom:
     autoswagger:
