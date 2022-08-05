@@ -1,11 +1,14 @@
 import { middyfy } from "@libs/lambda";
 import { S3 } from "@aws-sdk/client-s3";
+import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
+import { NewProduct } from "src/types/products";
 const CsvParser = require('csv-parser');
 
 const handler = async (event) => {
   console.log('s3 object parsing has started...');
 
   const s3 = new S3({ region: 'eu-west-1' });
+  const sqs = new SQSClient({ region: 'eu-west-1' });
 
   try {
     for (let record of event.Records) {
@@ -19,16 +22,15 @@ const handler = async (event) => {
         Key: objectKey,
       };
 
-      const newFile = await s3.getObject(params);
+      const newProduct = await s3.getObject(params);
 
-      await new Promise((res, rej) => {
+      const parsedProducts: NewProduct[] = await new Promise((res, rej) => {
         const result = [];
       
-        newFile.Body
+        newProduct.Body
           .pipe(CsvParser())
           .on('data', (data) => result.push(data))
           .on('end', () => {
-            console.log('File has been parsed successfully', result);
             res(result);
           })
           .on("error", (error) => {
@@ -36,6 +38,13 @@ const handler = async (event) => {
             rej(error);
           });
       })
+
+      parsedProducts.forEach(async (product) => {
+        await sqs.send(new SendMessageCommand({
+          MessageBody: JSON.stringify(product),
+          QueueUrl: process.env.SQS_QUEUE_URL,
+        }));
+      });
 
       const copyObjectParams = {
         Bucket: bucketName, 
