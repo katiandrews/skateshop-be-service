@@ -15,6 +15,11 @@ export default {
           }
         },
         cors: true,
+        authorizer: {
+          arn: '${env:AUTHORIZER_LAMBDA_ARN}',
+          identitySource: 'method.request.header.Authorization',
+          type: 'token'
+        }
       },
     },
   ],

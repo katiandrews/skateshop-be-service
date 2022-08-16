@@ -1,6 +1,9 @@
 import type { AWS } from '@serverless/typescript';
+import * as dotenv from "dotenv";
 
-import hello from '@functions/basicAuthorizer';
+import basicAuthorizer from '@functions/basicAuthorizer';
+
+dotenv.config({path: __dirname + '/.env'});
 
 const serverlessConfiguration: AWS = {
   service: 'authorization-service',
@@ -21,7 +24,7 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { hello },
+  functions: { basicAuthorizer },
   package: { individually: true },
   custom: {
     esbuild: {

@@ -39,7 +39,8 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
-      SQS_QUEUE_URL: process.env.SQS_QUEUE_URL
+      SQS_QUEUE_URL: process.env.SQS_QUEUE_URL,
+      AUTHORIZER_LAMBDA_ARN: process.env.AUTHORIZER_LAMBDA_ARN
     },
   },
   // import the function via paths
