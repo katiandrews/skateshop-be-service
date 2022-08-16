@@ -1,13 +1,12 @@
 import type { AWS } from '@serverless/typescript';
 import * as dotenv from "dotenv";
 
-import importProductsFile from '@functions/importProductsFile';
-import importFileParser from '@functions/importFileParser';
+import basicAuthorizer from '@functions/basicAuthorizer';
 
 dotenv.config({path: __dirname + '/.env'});
 
 const serverlessConfiguration: AWS = {
-  service: 'import-service',
+  service: 'authorization-service',
   frameworkVersion: '3',
   useDotenv: true,
   plugins: ['serverless-esbuild'],
@@ -15,23 +14,6 @@ const serverlessConfiguration: AWS = {
     name: 'aws',
     runtime: 'nodejs14.x',
     region: 'eu-west-1',
-    iamRoleStatements: [
-      {
-        Effect: 'Allow',
-        Resource: 'arn:aws:s3:::skate-shop-products',
-        Action: "s3:ListBucket",
-      },
-      {
-        Effect: 'Allow',
-        Resource: 'arn:aws:s3:::skate-shop-products/*',
-        Action: "s3:*",
-      },
-      {
-        Effect: 'Allow',
-        Resource: 'arn:aws:sqs:eu-west-1:451720059886:catalogItemsQueue',
-        Action: "sqs:SendMessage",
-      },
-    ],
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
@@ -39,15 +21,11 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
-      SQS_QUEUE_URL: process.env.SQS_QUEUE_URL,
-      AUTHORIZER_LAMBDA_ARN: process.env.AUTHORIZER_LAMBDA_ARN
+      katiandrews: process.env.katiandrews,
     },
   },
   // import the function via paths
-  functions: { 
-    importProductsFile,
-    importFileParser
-  },
+  functions: { basicAuthorizer },
   package: { individually: true },
   custom: {
     esbuild: {
