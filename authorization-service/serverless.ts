@@ -8,6 +8,7 @@ dotenv.config({path: __dirname + '/.env'});
 const serverlessConfiguration: AWS = {
   service: 'authorization-service',
   frameworkVersion: '3',
+  useDotenv: true,
   plugins: ['serverless-esbuild'],
   provider: {
     name: 'aws',

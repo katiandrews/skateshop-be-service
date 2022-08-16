@@ -1,7 +1,7 @@
 import { middyfy } from '@libs/lambda';
 
 const handler = async (event) => {
-  if(event['type'] != 'token') {
+  if(event.type != 'TOKEN') {
     return {
       statusCode: 401,
       error: 'Unauthorized',
@@ -21,10 +21,7 @@ const handler = async (event) => {
 
     const effect = !storedUserPassword || storedUserPassword !== password ? 'Deny' : 'Allow';
 
-    return {
-      statusCode: 200,
-      policy: generatePolicy(encodedToken, event.methodArn, effect),
-    }
+    return generatePolicy(encodedToken, event.methodArn, effect);
     
   } catch (error) {
     return {
